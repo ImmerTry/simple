@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.immertry.simple.mapper.UserMapper">
+    <resultMap id="userMap" type="top.immertry.simple.model.SysUser">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPassWord" column="user_password"/>
+        <result property="userEmail" column="user_Email"/>
+        <result property="userInfo" column="user_info"/>
+        <result property="headImg" column="head_img" jdbcType="BLOB"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="selectById" resultMap="userMap">
+        SELECT * FROM sys_user WHERE id = #{id}
+    </select>
+    <!--开启 mapUnderscoreToCamelCase 为 true-->
+    <select id="selectAll" resultType="top.immertry.simple.model.SysUser">
+        SELECT id,
+            user_name,
+            user_password,
+            user_email,
+            user_info,
+            head_img,
+            create_time
+        FROM sys_user
+    </select>
+    <!--<select id="selectAll" resultType="top.immertry.simple.model.SysUser">-->
+    <!--SELECT id,-->
+    <!--user_name userName,-->
+    <!--user_password userPassWord,-->
+    <!--user_mail userMail,-->
+    <!--user_info userInfo,-->
+    <!--head_img headImg,-->
+    <!--create_time createTime-->
+    <!--FROM sys_user-->
+    <!--</select>-->
+    <select id="selectRoleByUserId" resultType="top.immertry.simple.model.SysRole">
+        SELECT
+          r.id,
+          r.role_name roleName,
+          r.enabled,
+          r.create_by createBy,
+          r.create_time createTime
+        FROM sys_user u
+        INNER JOIN sys_user_role ur ON u.id = ur.user_id
+        INNER JOIN sys_role r ON ur.role_id = r.id
+        WHERE u.id = #{userId}
+    </select>
+    <insert id="insertSysUser">
+        INSERT INTO sys_user (
+        id,user_name,user_password,user_email,
+        user_info,head_img,create_time
+        )
+        VALUES (
+        #{id},#{userName},#{userPassWord},#{userEmail},#{userInfo},
+        #{headImg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSysUser1">
+        INSERT INTO sys_user(
+        user_name,user_password,user_email,
+        user_info,head_img,create_time
+        )
+        VALUES (
+        #{userName},#{userPassWord},#{userEmail},#{userInfo},
+        #{headImg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP}
+        )
+        <selectKey keyColumn="id" resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateById">
+        UPDATE sys_user
+        SET user_name = #{userName},
+            user_password = #{userPassWord},
+            user_email = #{userEmail},
+            user_info = #{userInfo},
+            head_img = #{headImg,jdbcType=BLOB},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        WHERE id = ${id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM sys_user WHERE id = #{id}
+    </delete>
+    <select id="selectByUser" resultType="top.immertry.simple.model.SysUser">
+        SELECT id,
+        user_name userName,
+        user_password userPassWord,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        FROM sys_user
+        <where>
+            <if test="userName != null and userName != ''">
+                <bind name="userNameLike" value="'%'+ userName +'%'"/>
+                AND user_name LIKE #{userNameLike}
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                AND user_email = #{userEmail}
+            </if>
+        </where>
+    </select>
+    <update id="updateByIdSelective">
+        UPDATE sys_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="userPassWord != null and userPassWord != ''">
+                user_password = #{userPassWord},
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                user_email = #{userEmail},
+            </if>
+            <if test="userInfo != null and userInfo != ''">
+                user_info = #{userInfo},
+            </if>
+            <if test="headImg != null">
+                head_img = #{headImg},
+            </if>
+            <if test="createTime != null">
+                creaet_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            id = #{id}
+        </set>
+        WHERE id = #{id}
+    </update>
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO sys_user(
+        user_name,user_password,
+        <if test="userEmail != null and userEmail != ''">
+            user_email,
+        </if>
+        user_info,head_img,create_time
+        )
+        VALUES (
+        #{userName},#{userPassWord},
+        <if test="userEmail != null and userEmail != ''">
+            #{userEmail},
+        </if>
+        #{userInfo},#{headImg,jdbcType=BLOB},
+        #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <select id="selectByIdOrUserName" resultType="top.immertry.simple.model.SysUser">
+        SELECT id,
+        user_name userName,
+        user_password userPassWord,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        FROM sys_user
+        WHERE 1 = 1
+        <choose>
+            <when test="id != null">
+                AND id = #{id}
+            </when>
+            <when test="userName != null and userName !=''">
+                AND user_name = #{userName}
+            </when>
+            <otherwise>
+                AND 1 = 2
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectByIdList" resultType="top.immertry.simple.model.SysUser">
+        SELECT id,
+        user_name userName,
+        user_password userPassWord,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        FROM sys_user
+        WHERE id IN
+        <foreach collection="list" open="(" close=")" separator="," item="id" index="i">
+            #{id}
+        </foreach>
+    </select>
+    <insert id="insertList" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user(
+        user_name,user_password,user_email,
+        user_info,head_img,create_time)
+        VALUES
+        <foreach collection="list" item="user" separator=",">
+            (
+            #{user.userName},#{user.userPassWord},#{user.userEmail},
+            #{user.userInfo},#{user.headImg,jdbcType=BLOB},
+            #{user.createTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+    <update id="updateByMap">
+        UPDATE sys_user
+        SET
+        <foreach collection="_parameter" item="val" index="key" separator=",">
+            ${key} = #{val}
+        </foreach>
+        WHERE id = #{id}
+    </update>
+</mapper>

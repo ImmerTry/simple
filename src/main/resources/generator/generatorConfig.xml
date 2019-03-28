@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--用于指定生成一组对象的环境 -->
+    <!--id 用来唯一确定该标签 必选-->
+    <!--targetRuntime 指定生成代码运行时的环境-->
+    <!--defaultModelType 定义 MBG 如何生成实体类-->
+    <!--defaultModelType = "flat" 每个表只生成一个实体类，当没有复杂的类继承时，使用起来很方便-->
+    <context id="MySqlContext"  targetRuntime="MyBatis3" defaultModelType="flat">
+        <!--配置前置分隔符属性-->
+        <property name="beginningDelimiter" value="'"/>
+        <!--配置后置分隔符属性-->
+        <property name="endingDelimiter" value="'"/>
+        <!--用于指定 MBG 要连接的数据库信息 必选 唯一 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/mybatis"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+        <!--用来配置如何生成注释信息-->
+        <commentGenerator>
+            <!--阻止生成的注释包含时间戳 默认 false-->
+            <property name="suppressDate" value="true"/>
+            <!--注释是否添加数据库表的备注信息 默认 false-->
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+        <!--用来指定 JDBC 类型和 Java 类型如何转换-->
+        <javaTypeResolver>
+            <!--是否强制将 DECIMAL 和 NUMBER 类型的 JDBC 字段转换为 Java 类型的 java.math.BigDecimal 默认 false-->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--用来控制生成的实体类-->
+        <!--targetPackage 生成实体类存放的包名。一般就放在该包下 -->
+        <!--targetProject 指定目标项目路径 可以使用相对路径或绝对路径-->
+        <javaModelGenerator targetPackage="test.model" targetProject="src\main\java">
+            <!--为 true 根据 catalog 和 schema 生成子包 直接使用 targetPackage 属性。 默认 false-->
+            <property name="enableSubPackages" value="false"/>
+            <!--判断是否对数据库查询结果进行 trim 操作，默认 false-->
+            <property name="trimStrings" value="false"/>
+        </javaModelGenerator>
+        <!--用于配置 SQL 映射生成器（Mapper.xml文件）属性-->
+        <!--targetPackage 生成 SQL 映射文件（XML文件）存放的包名。一般就放在该包下 -->
+        <!--targetProject 指定目标项目路径 可以使用相对路径或绝对路径-->
+        <sqlMapGenerator targetPackage="test.xml" targetProject="D:\ll\MybatisTest\simple\src\main\resources">
+            <!--为 true 根据 catalog 和 schema 生成子包 直接使用 targetPackage 属性。 默认 false-->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!--用于配置 Java 客户端生成器（Mapper接口）的属性-->
+        <!--type 用于选择客户端代码（Mapper接口）生成器-->
+        <!--targetPackage 生成 Mapper 接口存放的包名 -->
+        <!--targetProject 指定目标项目路径-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="test.dao" targetProject="src\main\java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--用于配置需要通过内省数据库的表 只有在 table 中配置过的表 才能经过上述其他配置生成最终的代码-->
+        <table tableName="%">
+            <!--column 生成列的列名-->
+            <!--sqlStatement 返回新值的 SQL 语句-->
+            <generatedKey column="id" sqlStatement="MySql"/>
+        </table>
+    </context>
+</generatorConfiguration>
