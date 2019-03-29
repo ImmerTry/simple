@@ -8,6 +8,7 @@
         <setting name="logImpl" value="LOG4J"/>
         <!--默认为 false 配置属性为true 可以自动将以下划线方式命名的数据库列映射到 Java 对象的驼峰式命名属性中-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!--配置一个包的别名-->
     <typeAliases>
