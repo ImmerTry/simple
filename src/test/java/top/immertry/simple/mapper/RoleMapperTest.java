@@ -3,6 +3,7 @@ package top.immertry.simple.mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
+import top.immertry.simple.model.SysPrivilege;
 import top.immertry.simple.model.SysRole;
 
 import java.util.Date;
@@ -101,7 +102,7 @@ public class RoleMapperTest extends BaseMapperTest {
             sysRole.setEnabled(1L);
             sysRole.setCreateTime(new Date());
             //返回受影响的行数
-            int result = roleMapper.update(sysRole);
+            int result = roleMapper.updateById(sysRole);
             //断言 修改后的 roleName = 超级管理员
             Assert.assertEquals("超级管理员", sysRole.getRoleName());
         } finally {
@@ -125,6 +126,62 @@ public class RoleMapperTest extends BaseMapperTest {
             Assert.assertEquals(1, result);
         } finally {
             sqlSession.rollback();
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void selectAllRoleAndPrivilege() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
+            List<SysRole> roleList = mapper.selectAllRoleAndPrivileges();
+            Assert.assertTrue(roleList.size() > 0);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void selectRoleByUserId() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            List<SysRole> roleList = roleMapper.selectRoleByUserId(1L);
+            Assert.assertTrue(roleList.size() > 0);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectRoleByUserIdChoose() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            //数据此时的用户状态都为1 所以要给其中一个角色设置为0
+            SysRole role = roleMapper.selectById(2L);
+//            role.setRoleId(2L);
+//            role.setEnabled(0L);
+//            int result = roleMapper.updateById(role);
+//            Assert.assertEquals(1,result);
+            //获取用户为 1 的信息
+            List<SysRole> roleList = roleMapper.selectRoleByUserIdChoose(1L);
+            for (SysRole r : roleList) {
+                System.out.println("角色名：" + r.getRoleName());
+                if (r.getRoleId().equals(1L)) {
+                    //第一个角色存在的权限信息
+                    Assert.assertNotNull(r.getPrivilegeList());
+                } else if (r.getRoleId().equals(2L)) {
+                    //第二个角色的权限为 null
+//                    Assert.assertNull(r.getPrivilegeList());
+                    continue;
+                }
+                for (SysPrivilege privilege : r.getPrivilegeList()) {
+                    System.out.println("权限名：" + privilege.getPrivilegeName());
+                }
+            }
+        } finally {
             sqlSession.close();
         }
     }

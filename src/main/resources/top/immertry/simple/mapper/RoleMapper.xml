@@ -6,10 +6,66 @@
         <id property="roleId" column="id"/>
         <result property="roleName" column="role_name"/>
         <result property="enabled" column="enabled"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <association property="createInfo">
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+    <resultMap id="rolePrivilegeListMap" extends="roleMap" type="top.immertry.simple.model.SysRole">
+        <collection property="privilegeList" columnPrefix="privilege_"
+                    resultMap="top.immertry.simple.mapper.PrivilegeMapper.privilegeMap"/>
+    </resultMap>
+    <resultMap id="rolePrivilegeListMapSelect" type="top.immertry.simple.model.SysRole"
+               extends="roleMap">
+        <collection property="privilegeList" fetchType="lazy" column="{roleId=id}"
+                    select="top.immertry.simple.mapper.PrivilegeMapper.selectPrivilegeByRoleId"/>
+    </resultMap>
+    <resultMap id="rolePrivilegeListMapChoose" type="top.immertry.simple.model.SysRole">
+        <discriminator javaType="int" column="enabled">
+            <case value="1" resultMap="rolePrivilegeListMapSelect"/>
+            <case value="0" resultMap="top.immertry.simple.model.SysRole">
+                <id column="id" property="roleId"/>
+                <result property="roleName" column="role_name"/>
+            </case>
+        </discriminator>
     </resultMap>
     <select id="selectRoleById" resultMap="roleMap">
         SELECT * FROM sys_role WHERE id = #{id}
+    </select>
+    <select id="selectAllRoleAndPrivileges" resultMap="rolePrivilegeListMap">
+        SELECT
+        r.id,
+        r.role_name,
+        r.enabled,
+        r.create_by,
+        r.create_time,
+        p.id privilege_id,
+        p.privilege_name privilege_name,
+        p.privilege_url privilege_url
+        FROM sys_role r
+        INNER JOIN sys_role_privilege rp ON rp.role_id = r.id
+        INNER JOIN sys_privilege p ON p.id = rp.privilege_id
+    </select>
+    <select id="selectRoleByUserId" resultMap="rolePrivilegeListMapSelect">
+        SELECT
+        r.id,
+        r.role_name,
+        r.enabled,
+        r.create_by,
+        r.create_time
+        FROM sys_role r
+        INNER JOIN sys_user_role ur ON ur.role_id = r.id
+        WHERE ur.user_id = #{userId}
+    </select>
+    <select id="selectRoleByUserIdChoose" resultMap="rolePrivilegeListMapChoose">
+        SELECT
+        r.id,
+        r.role_name,
+        r.enabled,
+        r.create_by,
+        r.create_time
+        FROM sys_role r
+        INNER JOIN sys_user_role ur ON ur.role_id = r.id
+        WHERE ur.user_id = #{userId}
     </select>
 </mapper>

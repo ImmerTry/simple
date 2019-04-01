@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @Author: LL
- * @Date: 2019/3/27 0027 下午 3:30
+ * @Date: 2019/3/27  下午 3:30
  * @Content: 读取 MBG 配置生成代码
  */
 public class Generator {

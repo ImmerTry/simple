@@ -4,6 +4,7 @@
 <mapper namespace="top.immertry.simple.mapper.UserMapper">
     <resultMap id="userMap" type="top.immertry.simple.model.SysUser">
         <id property="id" column="id"/>
+        <!--        <id property="userPassWord" column="user_password"/>-->
         <result property="userName" column="user_name"/>
         <result property="userPassWord" column="user_password"/>
         <result property="userEmail" column="user_Email"/>
@@ -24,9 +25,16 @@
     </resultMap>
     <resultMap id="userRoleListMap" type="top.immertry.simple.model.SysUser" extends="userMap">
         <collection property="roleList" columnPrefix="role_"
-                    resultMap="top.immertry.simple.mapper.RoleMapper.roleMap">
+                    resultMap="top.immertry.simple.mapper.RoleMapper.rolePrivilegeListMap">
         </collection>
     </resultMap>
+    <resultMap id="userRoleListMapSelect" type="top.immertry.simple.model.SysUser"
+               extends="userMap">
+        <collection property="roleList" fetchType="lazy"
+                    select="top.immertry.simple.mapper.RoleMapper.selectRoleByUserId"
+                    column="{userId=id}"/>
+    </resultMap>
+
     <select id="selectById" resultMap="userMap">
         SELECT * FROM sys_user WHERE id = #{id}
     </select>
@@ -280,9 +288,25 @@
         r.role_name role_role_name,
         r.enabled role_enabled,
         r.create_by role_create_by,
-        r.create_time role_create_time
+        r.create_time role_create_time,
+        p.privilege_name role_privilege_privilege_name,
+        p.privilege_url role_privilege_privilege_url
         FROM sys_user u
         INNER JOIN sys_user_role ur ON u.id = ur.user_id
         INNER JOIN sys_role r ON ur.role_id = r.id
+        INNER JOIN sys_role_privilege rp ON rp.role_id = r.id
+        INNER JOIN sys_privilege p ON p.id = rp.privilege_id
+    </select>
+    <select id="selectAllUserAndRolesSelect" resultMap="userRoleListMapSelect">
+        SELECT
+        u.id,
+        u.user_name,
+        u.user_password,
+        u.user_email,
+        u.user_info,
+        u.head_img,
+        u.create_time
+        FROM sys_user u
+        WHERE u.id = #{id}
     </select>
 </mapper>

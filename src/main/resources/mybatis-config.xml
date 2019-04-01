@@ -8,6 +8,7 @@
         <setting name="logImpl" value="LOG4J"/>
         <!--默认为 false 配置属性为true 可以自动将以下划线方式命名的数据库列映射到 Java 对象的驼峰式命名属性中-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- aggressiveLazyLoading：积极的懒加载，false的话按需加载，默认是true-->
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!--配置一个包的别名-->
@@ -31,12 +32,12 @@
     <!--配置一个包含完整类路径的 CountryMapper.xml SQL语句和映射文件-->
     <!--0.1-->
     <!--<mappers>-->
-        <!--<mapper resource="top/immertry/simple/mapper/CountryMapper.xml"/>-->
-        <!--<mapper resource="top/immertry/simple/mapper/UserRoleMapper.xml"/>-->
-        <!--<mapper resource="top/immertry/simple/mapper/UserMapper.xml"/>-->
-        <!--<mapper resource="top/immertry/simple/mapper/RolePrivilegeMapper.xml"/>-->
-        <!--<mapper resource="top/immertry/simple/mapper/RoleMapper.xml"/>-->
-        <!--<mapper resource="top/immertry/simple/mapper/PrivilegeMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/CountryMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/UserRoleMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/UserMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/RolePrivilegeMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/RoleMapper.xml"/>-->
+    <!--<mapper resource="top/immertry/simple/mapper/PrivilegeMapper.xml"/>-->
     <!--</mappers>-->
     <!--1.0-->
     <mappers>

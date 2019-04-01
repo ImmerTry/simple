@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import top.immertry.simple.model.SysPrivilege;
 
+import java.util.List;
+
 /**
  * @Author: LL
  * @Date: 2019/3/26 0026 下午 1:51
@@ -24,7 +26,22 @@ public class PrivilegeMapperTest extends BaseMapperTest {
             //断言 privilege 不为 空
             Assert.assertNotNull(privilege);
             //断言 privilegeName = 用户管理
-            Assert.assertEquals("用户管理",privilege.getPrivilegeName());
+            Assert.assertEquals("用户管理", privilege.getPrivilegeName());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void selectPrivilegeByRoleId() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            PrivilegeMapper privilegeMapper = sqlSession.getMapper(PrivilegeMapper.class);
+            List<SysPrivilege> privilegeList = privilegeMapper.selectPrivilegeByRoleId(2L);
+            for (SysPrivilege privilege : privilegeList) {
+                System.out.println(privilege.getPrivilegeName());
+            }
+            Assert.assertTrue(privilegeList.size() > 0);
         } finally {
             sqlSession.close();
         }

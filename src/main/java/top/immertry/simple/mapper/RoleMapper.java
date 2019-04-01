@@ -93,15 +93,45 @@ public interface RoleMapper {
             "create_time = #{createTime,jdbcType=TIMESTAMP}",
             "where id = #{roleId}"
     })
-    int update(SysRole sysRole);
+    int updateById(SysRole sysRole);
 
+    /**
+     * 根据主键删除信息
+     *
+     * @param id
+     * @return
+     */
     @Delete({"delete from sys_role where id =#{roleId}"})
     int deleteById(Long id);
 
+
     /**
      * 根据主键查询 角色权限信息
+     *
      * @param id
      * @return
      */
     SysRole selectRoleById(Long id);
+
+    /**
+     * 查询所有角色所对应的权限信息
+     *
+     * @return
+     */
+
+    List<SysRole> selectAllRoleAndPrivileges();
+
+    /**
+     * 根据角色 id 查询所对应的权限信息
+     * @param id
+     * @return
+     */
+    List<SysRole> selectRoleByUserId(Long id);
+
+    /**
+     * 根据用户 ID 获取用户所有角色信息
+     * @param id
+     * @return
+     */
+    List<SysRole> selectRoleByUserIdChoose(Long id);
 }

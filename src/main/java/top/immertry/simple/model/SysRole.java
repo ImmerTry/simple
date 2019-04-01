@@ -1,6 +1,7 @@
 package top.immertry.simple.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: LL
@@ -28,6 +29,16 @@ public class SysRole {
      * 创建时间
      */
     private Date createTime;
+
+    /**
+     * 角色包含的权限列表
+     */
+    private List<SysPrivilege> privilegeList;
+
+    /**
+     * 创建信息
+     */
+    private CreateInfo createInfo;
 
     public Long getRoleId() {
         return roleId;
@@ -67,6 +78,22 @@ public class SysRole {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public List<SysPrivilege> getPrivilegeList() {
+        return privilegeList;
+    }
+
+    public void setPrivilegeList(List<SysPrivilege> privilegeList) {
+        this.privilegeList = privilegeList;
+    }
+
+    public CreateInfo getCreateInfo() {
+        return createInfo;
+    }
+
+    public void setCreateInfo(CreateInfo createInfo) {
+        this.createInfo = createInfo;
     }
 }
 

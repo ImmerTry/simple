@@ -11,6 +11,7 @@ public class SysPrivilege {
      */
     private Long privilegeId;
     /**
+     *
      * 权限名称
      */
     private String privilegeName;
