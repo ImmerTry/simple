@@ -309,4 +309,16 @@
         FROM sys_user u
         WHERE u.id = #{id}
     </select>
+    <select id="selectUserById" statementType="CALLABLE" useCache="false">
+        {call select_user_by_id(
+        #{id,mode=In},
+        #{userName,mode=OUT,jdbcType=VARCHAR}
+        #{userpassWord,mode=OUT,jdbcType=VARCHAR}
+        #{userEmail,mode=OUT,jdbcType=VARCHAR}
+        #{userInfo,mode=OUT,jdbcType=VARCHAR}
+        #{headImg,mode=OUT,jdbcType=BLOB,javaType=_byte[]}
+        #{createTime,mode=OUT,jdbcType=TIMESTAMP}
+        )
+        }
+    </select>
 </mapper>

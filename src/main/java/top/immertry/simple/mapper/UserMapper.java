@@ -177,4 +177,11 @@ public interface UserMapper {
      * @return
      */
     SysUser selectAllUserAndRolesSelect(Long id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    List<SysUser> selectUserById(Long id);
 }

@@ -11,7 +11,7 @@
  Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 01/04/2019 10:07:56
+ Date: 02/04/2019 18:30:22
 */
 
 SET NAMES utf8mb4;
@@ -129,5 +129,98 @@ CREATE TABLE `sys_user_role`  (
 INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (1, 2);
 INSERT INTO `sys_user_role` VALUES (1001, 2);
+
+-- ----------------------------
+-- Procedure structure for delete_user_by_id
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `delete_user_by_id`;
+delimiter ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_user_by_id`(IN userId BIGINT)
+BEGIN
+ DELETE FROM sys_user_role WHERE user_id = userId;
+ DELETE FROM sys_user WHERE id = user_id;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insert_user_and_roles
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insert_user_and_roles`;
+delimiter ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_user_and_roles`(
+	OUT userId BIGINT,
+	IN userName VARCHAR(50),
+	IN userPassWord VARCHAR(50),
+	IN userEmail VARCHAR(50),
+	IN userInfo TEXT,
+	IN headImg BLOB,
+	OUT createTime DATETIME,
+	IN roleIds VARCHAR(200)
+)
+BEGIN
+#设置当前时间
+SET createTime = NOW();
+#插入数据
+INSERT INTO sys_user (user_name,user_password,user_email,user_info,head_img,create_time)
+VALUES(userName,userPassWord,userEmail,userInfo,heaedImg,createtime);
+# 获取自增主键
+SELECT LAST_INSERT_ID() INTO userId;
+#保存用户和角色关系数据
+SET roleIds = CONCAT(',',roleIds,',');
+INSERT INTO sys_user_role(user_id,role_id)
+SELECT userId,id FROM sys_role
+WHERE INSTR(roleIds,CONCAT(',',id,',')) > 0;
+ENd
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for select_user_by_id
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `select_user_by_id`;
+delimiter ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `select_user_by_id`(
+	IN userId BIGINT,
+	OUT userName VARCHAR(50),
+	OUT userPassWord VARCHAR(50),
+	OUT userEmail VARCHAR(50),
+	OUT userInfo TEXT,
+	OUT headImg BLOB,
+	OUT createTime DATETIME
+)
+BEGIN
+# 根据用户 ID 查询其他数据
+SELECT user_name,user_password,user_email,user_info, head_img,create_time
+INTO userName,userPassWord,userEmail,userInfo,headImg,createTime
+FROM sys_user
+WHERE id = userId;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for select_user_page
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `select_user_page`;
+delimiter ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `select_user_page`(
+	IN userName VARCHAR(50),
+	IN _offset BIGINT,
+	IN _limit BIGINT,
+	IN total BiGINT)
+BEGIN
+#查询总数
+SELECT count(*) INTO total
+FROM sys_user
+WHERE user_name LIKE CONCAT('%',userName,'%');
+#分页查询数据
+SELECT *
+FROM sys_user
+WHERE user_name LIKE CONCAT('%',userName,'%')
+LIMIT _offset, _limit;
+END
+;;
+delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
