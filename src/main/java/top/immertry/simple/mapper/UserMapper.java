@@ -1,5 +1,6 @@
 package top.immertry.simple.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import top.immertry.simple.model.SysRole;
 import top.immertry.simple.model.SysUser;
 
@@ -179,9 +180,40 @@ public interface UserMapper {
     SysUser selectAllUserAndRolesSelect(Long id);
 
     /**
-     *
      * @param id
      * @return
      */
     List<SysUser> selectUserById(Long id);
+
+    /**
+     * 使用存储过程查询用户信息
+     *
+     * @param user
+     */
+    void selectUserById(SysUser user);
+
+    /**
+     * 使用存储过程分页查询
+     *
+     * @param params
+     * @return
+     */
+    List<SysUser> selectUserPage(Map<String, Object> params);
+
+    /**
+     * 保存用户信息和角色关联信息
+     *
+     * @param user
+     * @param roleIds
+     * @return
+     */
+    int insertUserAndRoles(@Param("user") SysUser user, @Param("roleIds") String roleIds);
+
+    /**
+     * 根据用户 id 删除用户和用户的角色信息
+     *
+     * @param id
+     * @return
+     */
+    int deleteUserById(Long id);
 }

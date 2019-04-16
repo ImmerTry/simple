@@ -439,4 +439,62 @@ public class UserMapperTest extends BaseMapperTest {
         }
     }
 
+    @Test
+    public void testSelectUserById() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = new SysUser();
+            user.setId(1L);
+            userMapper.selectUserById(user);
+            Assert.assertNotNull(user.getUserName());
+            System.out.println("用户名： " + user.getUserName());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectUserPage() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("userName", "ad");
+            params.put("offset", 0);
+            params.put("limit", 10);
+            List<SysUser> userList = userMapper.selectUserPage(params);
+            Long total = (Long) params.get("total");
+            System.out.println("总数：" + total);
+            for (SysUser user : userList) {
+                System.out.println("用户名： " + user.getUserName());
+            }
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void tesstInsetAndDelete() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = new SysUser();
+            user.setUserName("test1");
+            user.setUserPassWord("1231");
+            user.setUserEmail("1136@qq.com");
+            user.setUserInfo("test info");
+            user.setHeadImg(new byte[]{1,2,3});
+            //插入用户信息和角色关联信息
+            userMapper.insertUserAndRoles(user,"1,2");
+            Assert.assertNotNull(user.getId());
+            Assert.assertNotNull(user.getCreateTime());
+//            sqlSession.commit();
+            //删除刚添加的数据
+            userMapper.deleteUserById(user.getId());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
 }
