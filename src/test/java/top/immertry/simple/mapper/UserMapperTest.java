@@ -475,7 +475,7 @@ public class UserMapperTest extends BaseMapperTest {
     }
 
     @Test
-    public void tesstInsetAndDelete() {
+    public void testInsetAndDelete() {
         SqlSession sqlSession = getSqlSession();
         try {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);

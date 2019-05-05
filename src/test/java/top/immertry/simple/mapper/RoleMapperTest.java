@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import top.immertry.simple.model.SysPrivilege;
 import top.immertry.simple.model.SysRole;
+import top.immertry.simple.type.Enabled;
 
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class RoleMapperTest extends BaseMapperTest {
             SysRole sysRole = new SysRole();
             sysRole.setRoleName("超级管理员");
             sysRole.setCreateBy(0L);
-            sysRole.setEnabled(1L);
+//            sysRole.setEnabled(1L);
             sysRole.setCreateTime(new Date());
             //返回受影响的行数
             int result = roleMapper.insertRole(sysRole);
@@ -99,7 +100,7 @@ public class RoleMapperTest extends BaseMapperTest {
             Assert.assertEquals("管理员", sysRole.getRoleName());
             sysRole.setRoleName("超级管理员");
             sysRole.setCreateBy(0L);
-            sysRole.setEnabled(1L);
+//            sysRole.setEnabled(1L);
             sysRole.setCreateTime(new Date());
             //返回受影响的行数
             int result = roleMapper.updateById(sysRole);
@@ -182,6 +183,21 @@ public class RoleMapperTest extends BaseMapperTest {
                 }
             }
         } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testUpdateById() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
+            SysRole role = mapper.selectById(2L);
+            Assert.assertEquals(Enabled.enabled,role.getEnabled());
+            role.setEnabled(Enabled.disabled);
+            mapper.updateById(role);
+        } finally {
+            sqlSession.rollback();
             sqlSession.close();
         }
     }

@@ -10,6 +10,7 @@ import java.util.List;
  * @Date: 2019/3/22 0022 下午 5:48
  * @Content: 权限
  */
+@CacheNamespaceRef(RoleMapper.class)
 public interface RoleMapper {
     /**
      * 通过主键查询角色信息
@@ -123,6 +124,7 @@ public interface RoleMapper {
 
     /**
      * 根据角色 id 查询所对应的权限信息
+     *
      * @param id
      * @return
      */
@@ -130,6 +132,7 @@ public interface RoleMapper {
 
     /**
      * 根据用户 ID 获取用户所有角色信息
+     *
      * @param id
      * @return
      */

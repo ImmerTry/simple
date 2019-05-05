@@ -1,5 +1,8 @@
 package top.immertry.simple.model;
 
+import top.immertry.simple.type.Enabled;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +11,8 @@ import java.util.List;
  * @Date: 2019/3/22 下午 5:00
  * @Content: 角色表
  */
-public class SysRole {
+public class SysRole implements Serializable {
+
     /**
      * 角色 ID
      */
@@ -20,7 +24,7 @@ public class SysRole {
     /**
      * 有效标志
      */
-    private Long enabled;
+    private Enabled enabled;
     /**
      * 创建人
      */
@@ -56,11 +60,11 @@ public class SysRole {
         this.roleName = roleName;
     }
 
-    public Long getEnabled() {
+    public Enabled getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Long enabled) {
+    public void setEnabled(Enabled enabled) {
         this.enabled = enabled;
     }
 

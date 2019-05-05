@@ -35,7 +35,7 @@
                     column="{userId=id}"/>
     </resultMap>
 
-    <select id="selectById" resultMap="userMap">
+    <select id="selectById" flushCache="true" resultMap="userMap">
         SELECT * FROM sys_user WHERE id = #{id}
     </select>
     <!--开启 mapUnderscoreToCamelCase 为 true-->

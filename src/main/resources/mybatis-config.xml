@@ -10,11 +10,16 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- aggressiveLazyLoading：积极的懒加载，false的话按需加载，默认是true-->
         <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 二级缓存配置 默认为true -->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
     <!--配置一个包的别名-->
     <typeAliases>
         <package name="top.immertry.simple.model"/>
     </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="top.immertry.simple.type.EnabledTypeHandler" javaType="top.immertry.simple.type.Enabled"/>
+    </typeHandlers>
     <!--数据库连接-->
     <environments default="development">
         <environment id="development">
