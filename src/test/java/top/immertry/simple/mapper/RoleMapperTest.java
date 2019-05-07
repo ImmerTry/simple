@@ -1,10 +1,12 @@
 package top.immertry.simple.mapper;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
 import top.immertry.simple.model.SysPrivilege;
 import top.immertry.simple.model.SysRole;
+import top.immertry.simple.plugin.PageRowBounds;
 import top.immertry.simple.type.Enabled;
 
 import java.util.Date;
@@ -193,12 +195,46 @@ public class RoleMapperTest extends BaseMapperTest {
         try {
             RoleMapper mapper = sqlSession.getMapper(RoleMapper.class);
             SysRole role = mapper.selectById(2L);
-            Assert.assertEquals(Enabled.enabled,role.getEnabled());
+            Assert.assertEquals(Enabled.enabled, role.getEnabled());
             role.setEnabled(Enabled.disabled);
             mapper.updateById(role);
         } finally {
             sqlSession.rollback();
             sqlSession.close();
         }
+    }
+
+    @Test
+    public void testSelectAllByRowBounds() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            //查询第一个，使用 RowBounds 类型时不会查询总数
+            RowBounds rowBounds = new RowBounds(0, 1);
+            List<SysRole> sysRoles = roleMapper.selectAll(rowBounds);
+            for (SysRole role : sysRoles) {
+                System.out.println("角色名: " + role.getRoleName());
+            }
+            //使用 PageRowBounds 是会查询总数
+            PageRowBounds pageRowBounds = new PageRowBounds(0, 1);
+            sysRoles = roleMapper.selectAll(pageRowBounds);
+            //获取总数
+            System.out.println("查询总数： " + pageRowBounds.getTotal());
+            for (SysRole role : sysRoles) {
+                System.out.println("角色名 " + role.getRoleName());
+            }
+            //再次查询获取第二个角色
+            pageRowBounds = new PageRowBounds(1, 1);
+            sysRoles = roleMapper.selectAll(pageRowBounds);
+            //获取总数
+            System.out.println("查询总数 " + pageRowBounds.getTotal());
+            for (SysRole role : sysRoles) {
+                System.out.println("角色名： " + role.getRoleName());
+            }
+        } finally {
+            sqlSession.close();
+        }
+
     }
 }

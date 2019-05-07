@@ -20,6 +20,12 @@
     <typeHandlers>
         <typeHandler handler="top.immertry.simple.type.EnabledTypeHandler" javaType="top.immertry.simple.type.Enabled"/>
     </typeHandlers>
+    <!--    拦截器-->
+    <plugins>
+        <plugin interceptor="top.immertry.simple.plugin.PageInterceptor">
+            <property name="dialect" value="top.immertry.simple.plugin.MySqlDialect"/>
+        </plugin>
+    </plugins>
     <!--数据库连接-->
     <environments default="development">
         <environment id="development">

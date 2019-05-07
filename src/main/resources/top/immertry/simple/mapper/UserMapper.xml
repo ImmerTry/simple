@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="top.immertry.simple.mapper.UserMapper">
+    <!--    <cache/>-->
+    <cache-ref namespace="top.immertry.simple.mapper.RoleMapper"/>
     <resultMap id="userMap" type="top.immertry.simple.model.SysUser">
         <id property="id" column="id"/>
         <!--        <id property="userPassWord" column="user_password"/>-->

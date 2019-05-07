@@ -1,5 +1,6 @@
 package top.immertry.simple.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * @Date: 2019/3/22 下午 4:42
  * @Content: 用户表
  */
-public class SysUser {
+public class SysUser implements Serializable {
     /**
      * 用户ID
      */
@@ -16,7 +17,7 @@ public class SysUser {
     /**
      * 用户名
      */
-    private String userName ;
+    private String userName;
     /**
      * 密码
      */

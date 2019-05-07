@@ -1,6 +1,7 @@
 package top.immertry.simple.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import top.immertry.simple.model.SysRole;
 
 import java.util.List;
@@ -47,6 +48,9 @@ public interface RoleMapper {
     @ResultMap("roleResultMap")
     @Select("select * from sys_role")
     List<SysRole> selectAll();
+
+
+    List<SysRole> selectAll(RowBounds rowBounds);
 
     /**
      * 插入数据 不需要返回主键
